@@ -1,0 +1,35 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+<div class="kmap-container">
+    <div class="kmap">
+      <div class="kmap-table-row" *ngFor="let row_tables of generateKmap(); let tablerowIndex = index">
+        <div class="kmap-table" *ngFor="let table of row_tables; let tableIndex = index">
+          <div class="kmap-row" *ngIf="num_var > 4"> {{ generateKmapTitles()[tablerowIndex][tableIndex] }} </div>
+          <div class="kmap-row" *ngFor="let row of table; let rowIndex = index">
+            <div class="kmap-cell" *ngFor="let cell of row; let cellIndex = index">{{ cell }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="user-info">
+      <div>
+        <div>{{ username }}</div> <div> Score: {{ score }} </div>
+        <div>
+      <p>{{ getQuestion() }}</p>
+      <form [formGroup] = "answerForm" (ngSubmit)="onSubmit()">
+        <input type="text" id="answer" formControlName="answer" autocomplete="off">
+            <button type="submit" [disabled]="answerForm.invalid">Submit</button>
+        <div *ngIf="answerForm.controls['answer'].invalid && (answerForm.controls['answer'].dirty || answerForm.controls['answer'].touched)">
+            <div class="error">Empty answer.</div>
+        </div>
+        <div *ngIf="answerForm.controls['answer'].pristine" [ngSwitch]="result">
+          <div *ngSwitchCase="-4" class="error">Server error (500). Please contact your instructor.</div>
+            <div *ngSwitchCase="-1" class="error">Invalid characters &#123;ABCDEF'+ &#125; only.</div>
+            <div *ngSwitchCase="0" class="error">Wrong answer.</div>
+            <div *ngSwitchCase="1" class="correct">Correct answer!</div>
+        </div>
+      </form>
+    </div>
+  </div>

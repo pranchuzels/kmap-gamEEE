@@ -1,0 +1,15 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+<div routerLink="/" class="container">
+    <div class="form-container"  [@view]="showStart" (@view.done)="onAnimationDone($event)">
+      <form [formGroup]= "applyForm" (ngSubmit)="submitName()">
+        <label for="username">Enter your name:</label>
+        <input type="text" id="username" formControlName="username" required autocomplete="off" [class.error]="submitted && username?.errors?.['required']">
+            <button type="submit">Start</button>
+            <div *ngIf="submitted && username?.errors?.['required']" class="error-message">Name is required.</div>
+            <div class="note-message">Note: Not yet fully working for mobile devices.</div>
+      </form>
+    </div>
+  </div>

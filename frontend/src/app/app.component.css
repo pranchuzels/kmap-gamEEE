@@ -1,0 +1,36 @@
+.main {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    overflow: auto;
+}
+
+.header {
+  position: absolute;
+  justify-self: left;
+  justify-content: left;
+  align-content: end;
+  align-self: end;
+  bottom: 1%;
+  left: 1%;
+  width: auto;
+  height: 10%;
+}
+
+.header h1 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: bold;
+  font-size: clamp(5vh, 5vh, 5vh);
+  margin: 0;
+  color: rgba(252, 255, 255, 0.06);
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
