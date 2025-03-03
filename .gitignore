@@ -5,8 +5,10 @@
 .vscode/
 
 # Frontend
-frontend/.angular
+frontend/.angular/cache/19.1.8/frontend/.tsbuildinfo
 frontend/node_modules
+
 
 # Assets
 assets/
+
