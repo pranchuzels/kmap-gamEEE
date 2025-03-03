@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-^p)jykq3zb!sfn0@_054=x(7!af*rxr$w@=)7rz73t1p^6j@75
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kmap-gameee-backend.vercel.app']
+ALLOWED_HOSTS = [
+    'kmap-gameee-backend.vercel.app',
+    '127.0.0.1', 
+    'localhost'
+    ]
 
 
 # Application definition
@@ -55,9 +59,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
-    'https://kmap-gameee-backend.vercel.app',
-    'https://kmap-gameee-backend.vercel.app/user',
-    'https://kmap-gameee-backend.vercel.app/game'
+    'https://kmap-gameee.vercel.app'
 ]
 
 ROOT_URLCONF = 'backend.urls'
