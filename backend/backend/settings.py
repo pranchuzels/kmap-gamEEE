@@ -54,7 +54,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',  # Angular's default localhost address
+    'http://localhost:4200',
+    'https://kmap-gameee-backend.vercel.app/'
 ]
 
 ROOT_URLCONF = 'backend.urls'
