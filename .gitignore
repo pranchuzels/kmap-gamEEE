@@ -4,5 +4,9 @@
 # Visual Studio Code
 .vscode/
 
+# Frontend
+frontend/.angular
+frontend/node_modules
+
 # Assets
 assets/
