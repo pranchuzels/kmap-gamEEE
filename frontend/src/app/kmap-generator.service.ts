@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class KmapGeneratorService {
 
-  private checkUserAPIURL = 'http://127.0.0.1:8000/user';
-  private checkGameAPIURL = 'http://127.0.0.1:8000/game';
+  // private checkUserAPIURL = 'http://127.0.0.1:8000/user';
+  // private checkGameAPIURL = 'http://127.0.0.1:8000/game';
 
-  // private checkUserAPIURL = 'https://kmap-gameee-backend.vercel.app/user';
-  // private checkGameAPIURL = 'https://kmap-gameee-backend.vercel.app/game';
+  private checkUserAPIURL = 'https://kmap-gameee-backend.vercel.app/user';
+  private checkGameAPIURL = 'https://kmap-gameee-backend.vercel.app/game';
 
   constructor(private http: HttpClient) { }
 
