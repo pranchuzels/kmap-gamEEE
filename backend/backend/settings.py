@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^p)jykq3zb!sfn0@_054=x(7!af*rxr$w@=)7rz73t1p^6j@75
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://kmap-gameee-backend.vercel.app/']
 
 
 # Application definition
