@@ -55,7 +55,9 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
-    'https://kmap-gameee-backend.vercel.app/'
+    'https://kmap-gameee-backend.vercel.app',
+    'https://kmap-gameee-backend.vercel.app/user',
+    'https://kmap-gameee-backend.vercel.app/game'
 ]
 
 ROOT_URLCONF = 'backend.urls'
