@@ -31,10 +31,22 @@ class CheckUser(APIView):
         #     serializer = UserSerializer(user)
         #     user.save()
         #     return Response(serializer.data, status=status.HTTP_200_OK)
+        difficulty = request.data.get('difficulty')
+        if difficulty == 'easy':
+            difficulty = 1
+        elif difficulty == 'medium':
+            difficulty = 2
+        elif difficulty == 'hard':
+            difficulty = 3
+        else:
+            difficulty = 5
 
-        difficulty = 1
         score = 0
-        num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty)
+
+        if difficulty == 5:
+            num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=1)
+        else:
+            num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty)
         user = User(username=username, score=score, difficulty=difficulty, q_num_var=num_var, q_form=form, q_terms=terms, q_dont_cares=dont_cares, q_groupings=groupings)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -68,14 +80,20 @@ class CheckAnswer(APIView):
             result = request.data.get('user').get('result')
             if result == 1:
                 score += 1
-                if score >= 5 and difficulty == 1:
-                    difficulty = 2
-                if score >= 10 and difficulty == 2:
-                    difficulty = 3
+                if score >= 10 and difficulty == 5:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=3)
+                elif score >= 5 and difficulty == 5:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=2)
+                elif difficulty == 5:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=1)
+                else:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty)
             else:
                 score = 0
-                difficulty = 1
-            num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty)
+                if difficulty == 5:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=1)
+                else:
+                    num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty)
             user = User(username=username, score=score, difficulty=difficulty, q_num_var=num_var, q_form=form, q_terms=terms, q_dont_cares=dont_cares, q_groupings=groupings)
             serializer = UserSerializer(user)
             return Response({'result': result, 'user': serializer.data}, status=status.HTTP_200_OK)

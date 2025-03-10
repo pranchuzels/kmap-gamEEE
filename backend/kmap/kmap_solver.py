@@ -93,7 +93,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         # Set number of variables, groups, and form
         num_var = 4
         num_groups = random.randint(3, 5)
-        form = npr.choice(["min", "max"], p = [0.3, 0.7])
+        form = npr.choice(["min", "max"], p = [0.4, 0.6])
         # set dont cares
         num_dc = random.randint(1, 4)
         dc_in = random.randint(0, num_dc)

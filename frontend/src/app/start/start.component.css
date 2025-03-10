@@ -22,6 +22,9 @@
 
 .form-container {
     background-color: #3e5469;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     padding: 25px;
     border-radius: 10px;
     opacity: 0;
@@ -40,7 +43,7 @@ label {
 }
 
 input[type="text"] {
-    width: 80%;
+    width: 90%;
     padding: 15px;
     margin-bottom: 20px;
     border: none;
@@ -84,3 +87,29 @@ button:hover {
 .note-message {
     margin-top: 10px;
 }
+
+
+.difficulty-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.difficulty-buttons button {
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 80px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.difficulty-buttons button {
+  background-color: grey;
+}
+
+.difficulty-buttons button.selected {
+    background-color: #6C8C6B;
+}
+

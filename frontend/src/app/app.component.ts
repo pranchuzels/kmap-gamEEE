@@ -40,9 +40,9 @@ export class AppComponent implements OnInit{
     this.state = state;
   }
 
-  checkUser(username: string) {
-    const usernameValue = { username: username };
-    this.kmapGeneratorService.postCheckUser(usernameValue).subscribe(item => {
+  checkUser(emitter: string[]) {
+    const user_vals = { username: emitter[0], difficulty: emitter[1] };
+    this.kmapGeneratorService.postCheckUser(user_vals).subscribe(item => {
       this.username = (item.username);
       this.score = (item.score);
       this.difficulty = (item.difficulty);

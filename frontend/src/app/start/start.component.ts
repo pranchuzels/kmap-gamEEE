@@ -20,10 +20,10 @@ import { trigger, state, style, transition, animate, AnimationEvent } from '@ang
 export class StartComponent implements AfterViewInit, OnChanges{
   @Input() checkedUsername: boolean = false;
   @Output() startGame = new EventEmitter<number>();
-  @Output() emitUsername = new EventEmitter<string>();
+  @Output() emitUsername = new EventEmitter<string[]>();
   submitted = false;
   showStart = 'hidden';
-  
+  difficulty = 'easy';
 
   applyForm = new FormGroup({
     username: new FormControl("", Validators.required)
@@ -50,7 +50,9 @@ export class StartComponent implements AfterViewInit, OnChanges{
   submitName(): void {
     this.submitted = true;
     if (this.applyForm.valid) {
-      this.emitUsername.emit(this.applyForm.value.username || undefined);
+      if (this.applyForm.value.username) {
+        this.emitUsername.emit([this.applyForm.value.username, this.difficulty]);
+      }
     }
   }
 
@@ -64,4 +66,7 @@ export class StartComponent implements AfterViewInit, OnChanges{
     }
   }
 
+  setDifficulty(level: string): void {
+    this.difficulty = level;
+  }
 }

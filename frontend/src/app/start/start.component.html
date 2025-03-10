@@ -7,6 +7,12 @@
       <form [formGroup]= "applyForm" (ngSubmit)="submitName()">
         <label for="username">Enter your name:</label>
         <input type="text" id="username" formControlName="username" required autocomplete="off" [class.error]="submitted && username?.errors?.['required']">
+        <div class="difficulty-buttons">
+          <button type="button" [ngClass]="{'selected': difficulty == 'easy'}" (click)="setDifficulty('easy')">Easy</button>
+          <button type="button" [ngClass]="{'selected': difficulty == 'medium'}" (click)="setDifficulty('medium')">Medium</button>
+          <button type="button" [ngClass]="{'selected': difficulty == 'hard'}" (click)="setDifficulty('hard')">Hard</button>
+          <button type="button" [ngClass]="{'selected': difficulty == 'scaling'}" (click)="setDifficulty('scaling')">Scaling</button>
+        </div>
             <button type="submit">Start</button>
             <div *ngIf="submitted && username?.errors?.['required']" class="error-message">Name is required.</div>
             <div class="note-message">Note: Not yet fully working for mobile devices.</div>
