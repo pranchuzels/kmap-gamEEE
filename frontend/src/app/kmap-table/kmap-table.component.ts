@@ -97,7 +97,7 @@ export class KmapTableComponent implements OnChanges {
         this.emitAnswer.emit(answer);
         this.answerForm.markAsPristine();
         this.answerForm.disable();
-        this.result = -10; // check if this breaks anything!!
+        // this.result = -10; // check if this breaks anything!!
         
       } else {
         // Handle the invalid form
