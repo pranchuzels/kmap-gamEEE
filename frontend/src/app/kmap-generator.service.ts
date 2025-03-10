@@ -24,6 +24,11 @@ export class KmapGeneratorService {
     // return this.http.post<any>(this.apiUrl, item);
   }
 
+  getcheckAnswer(item: any): Observable<any> {
+    return this.http.request('get', this.checkGameAPIURL, { body: item });
+    // return this.http.post<any>(this.apiUrl, item);
+  }
+
   postCheckAnswer(item: any): Observable<any> {
     return this.http.request('post', this.checkGameAPIURL, { body: item });
     // return this.http.post<any>(this.apiUrl, item);

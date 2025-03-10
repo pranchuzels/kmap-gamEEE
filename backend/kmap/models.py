@@ -9,4 +9,5 @@ class User(models.Model):
     q_form = models.CharField(max_length=5)
     q_terms = models.JSONField()
     q_dont_cares = models.JSONField()
+    q_groupings = models.JSONField()
     

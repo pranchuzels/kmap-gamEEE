@@ -12,7 +12,10 @@
   [terms]="terms" 
   [dont_cares]="dont_cares"
   [result]="result"
+  [groupings]="groupings"
+  [answers]="answers"
   (emitAnswer)="checkAnswer($event)"
+  (emitChangeUserData)="changeUserData($event)"
 ></app-kmap-table>
 
 <div class="header">

@@ -1,4 +1,4 @@
-.kmap-container {
+.kmaps-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -17,8 +17,12 @@
 .user-info {
   display: flex;
   flex-direction: column;
-  padding: 25px;
-
+  /* width: 28vw;
+  height: 30vh; */
+  padding: 20px;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
   background-color: #3e5469;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
@@ -53,9 +57,9 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+/* button:hover {
     background-color: #5A7A59;
-}
+} */
 
 button:disabled {
     background-color: #354135;
@@ -63,7 +67,7 @@ button:disabled {
 }
 
 .error {
-  color: red;
+  color: rgba(255, 0, 0, 0.85);
 }
 
 .correct {
@@ -75,12 +79,28 @@ button:disabled {
   display: flex;
   flex-direction: row;
   padding: 10px;
+  position: relative;
 }
 
 .kmap-table {
+  background-color: #7897b4;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 0.2vh;
+  border: 2px solid rgba(252, 255, 255, 0.06);
+  border-radius: 5px;
+  z-index: 0;
+}
+
+.kmap-table-legend {
+  position: absolute;
+  top: -7.8vh;
+  left: -7.8vh;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid rgba(252, 255, 255, 0.00);
+  padding: 0.2vh;
+  z-index: -1;
 }
 
 .kmap-row {
@@ -91,14 +111,96 @@ button:disabled {
 
 .kmap-cell {
   background-color: #3e5469;
-  width: 50px;
-  height: 50px;
-  max-width: 4.5vh;
-  max-height: 4.5vh;
-  font-size: 1rem;
+  width: 8vh;
+  height: 8vh;
+  max-width: 50vw;
+  max-height: 50vw;
+  font-size: 130%;
   display: flex;
-  border: 2px solid rgba(252, 255, 255, 0.06);
-  padding: 10px;
+  border: 0.2vh solid rgba(252, 255, 255, 0.06);
+  border-radius: 5px;
+  margin: 0.4vh;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.kmap-legend-cell {
+  width: 8vh;
+  height: 8vh;
+  max-width: 50vw;
+  max-height: 50vw;
+  font-size: 130%;
+  display: flex;
+  border: 0.2vh solid rgba(252, 255, 255, 0);
+  border-radius: 5px;
+  margin: 0.4vh;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.kmap-group {
+  content: "";
+  position: absolute;
+  top: -0.3vh;
+  left: -0.3vh;
+  right: -0.3vh;
+  bottom: -0.3vh;
+  border: 0.6vh solid rgba(255, 0, 255, 0.4);
+  border-radius: 5px;
+  z-index: 1;
+  margin-bottom: -18vh;
+  margin-right: -18vh;
+}
+
+.kmap-group-2 {
+  content: "";
+  position: absolute;
+  top: -0.3vh;
+  left: -0.3vh;
+  right: -0.3vh;
+  bottom: -0.3vh;
+  border: 0.6vh solid rgba(0, 255, 0, 0.4);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-width: 0px;
+  z-index: 1;
+  margin-top: -0.6vh;
+  margin-bottom: -18vh;
+  margin-right: -18vh;
+}
+
+@media (max-width: 1000px) {
+  .kmap-container {
+    flex-direction: column;
+  }
+  /* .kmap-cell {
+    width: 15vw;
+    height: 15vw;
+    margin: 2px;
+  }
+
+  .kmap-table {
+    padding: 1px;
+  }
+
+  .kmap-group {
+    margin-bottom: -15vw;
+    margin-right: -40px; 
+  } */
+}
+
+@media (max-height: 400px) {
+  .kmap-table-legend {
+    top: -6vh;
+    left: -6vh;
+  }
+  .kmap-legend-cell {
+    font-size: 100%;
+  }
+
+  .kmap-cell {
+    font-size: 100%;
+  }
 }

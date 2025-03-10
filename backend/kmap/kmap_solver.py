@@ -9,12 +9,30 @@
 #  - check randomizer if its all 1's or 0's 
 #  - [DONE?] add checks for inputs in checkAnswer
 
-import copy, random, numpy.random as npr
+import copy, random, numpy as np, numpy.random as npr
+
+if __name__ == "__main__":
+    import group_generator as gg
+else:
+    import kmap.group_generator as gg
+    
 
 def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
+    
     """
     Generates a random question by giving a list of minterms/maxterms and don't cares.
 
+    What makes a K-Map easy or difficult to solve? The following are used as a starting point in this function: 
+    - Number of variables
+    - Number of groups (POS/SOP terms in final expression) and size of groups
+    - number of overlapping groups
+
+    With this, `randomizeQuestion()` defines the following difficulties:
+    ### Easy
+    - Expressions only up to 4 variables
+    - Up to 3 groups in minimal expression
+    - None or 1 overlapping group
+    
     :param difficulty: Difficulty of question to be generated. Possible values: 1 = easy, 2 = medium, 3 = hard, 4 = random.
     :type difficulty: int
 
@@ -29,38 +47,58 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
     """
     terms = []
     dont_cares = []
+
     if difficulty == 1:
         # For easy difficulty:
         # - Expressions only up to 3 terms
-        # - Equal possibility of 2, 3, 4 vars
+        # - Either 2, 3, 4 variables with p = [0.3, 0.4, 0.3] respectively
+        # - No multiple answers (hopefully?)
+        # - Mostly SOP
         # - No don't cares
-        # - Either biggest groups or smallest (?)
-        # - no multiple answers
-        # - SOP only
-        num_terms = random.randint(1, 3)
-        num_var = random.randint(2, 4)
-        terms_groupsizes = [random.randint(0, num_var-1) for _ in range(num_terms)]
-        terms = [set() for _ in range(num_terms)]
-    #     for i in range(len(terms)):
 
-    #     return
+        # Set number of variables, groups, and form
+        num_var = npr.choice([2, 3], p = [0.5, 0.5])
+        num_groups = random.randint(1, 2 if num_var == 2 else 3)
+        form = npr.choice(["min", "max"], p = [0.7, 0.3])
+        # set dont cares
+        num_dc = 0
+        dc_in = 0
+        dc_out = num_dc - dc_in
+        
     elif difficulty == 2:
-    #     # For medium difficulty:
-    #     # - Can have don't cares
-    #     # - Expressions can have up to 5 terms
-    #     # - All groups possible
-    #     # - Can multiple answers
-    #     # - Only 3 or 4 vars
-        return
+        # For medium difficulty:
+        # - 3 or 4 variables with p = [0.25, 0.75]
+        # - Expressions from 3 to 4 terms
+        # - 50/50 SOP/POS
+        # - Up to 2 don't cares
+
+        # Set number of variables, groups, and form
+        num_var = npr.choice([3, 4], p = [0.5, 0.5])
+        num_groups = random.randint(2, 4)
+        form = npr.choice(["min", "max"], p = [0.5, 0.5])
+        # set dont cares
+        num_dc = random.randint(0, 2)
+        dc_in = num_dc
+        dc_out = num_dc - dc_in
+
     elif difficulty == 3:
-    #     # For hard difficulty:
-    #     # - Can have don't cares
-    #     # - as much terms as possible
-    #     # - All groups possible
-    #     # - Can multiple answers
-    #     # - 4 vars only
-        return
+        # For hard difficulty:
+        # - 4 or 5 variables with p = [0.7, 0.3]
+        # - Groups up to 4 - 6 terms (or as much as possible)
+        # - 30/70 SOP/POS
+        # - Up to 6 don't cares
+        
+        # Set number of variables, groups, and form
+        num_var = 4
+        num_groups = random.randint(3, 5)
+        form = npr.choice(["min", "max"], p = [0.3, 0.7])
+        # set dont cares
+        num_dc = random.randint(1, 4)
+        dc_in = random.randint(0, num_dc)
+        dc_out = num_dc - dc_in
+    
     elif difficulty == 4:
+        # TODO: Fix random difficulty, DO NOT USE FOR ACTUAL QUESTIONS UNTIL FIXED
         num_var = random.randint(4, 6)
         terms = sorted(npr.choice(range(2**num_var), size=random.randint(int((2**num_var)/8), int((2**num_var)/2)), replace=False).tolist())
         num_dc = random.randint(0, 3)
@@ -70,7 +108,228 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
                 terms.remove(dc)
         form = random.choice(["min", "max"])
 
-    return num_var, form, terms, dont_cares
+    separate_groups = []
+    overlapping_groups = []
+    possible_s_groups = gg.generateGroups(num_var)
+    orig_groups = copy.deepcopy(possible_s_groups)
+    possible_o_groups = [[] for _ in range(num_var)]
+    dont_cares = []
+
+    # Group picker proper
+    while num_groups > 0:
+        # Stop if no more possible choices
+        if len(possible_s_groups) == 0 and all(len(group_sizes) == 0 for group_sizes in possible_o_groups):
+            break
+        
+        # Choose group type
+        if len(possible_s_groups) == 0 and any(len(group_sizes) > 0 for group_sizes in possible_o_groups):
+            c_type = "overlapping"
+        elif all(len(group_sizes) == 0 for group_sizes in possible_o_groups) or (len(separate_groups) == 0 and len(overlapping_groups) == 0):
+            c_type = "separate"
+        else:
+            c_type = random.choice(["separate", "overlapping"])
+
+        # Group type setter
+        if c_type == "separate":
+            chosen_group_set = separate_groups
+            possible_group_set = possible_s_groups
+        else:
+            chosen_group_set = overlapping_groups
+            possible_group_set = possible_o_groups
+        
+        # randomly choose in possible groups
+        while True:
+            c_group_size = random.randint(0, len(possible_group_set) - 1)
+            if len(possible_group_set[c_group_size]) > 0:
+                break
+        c_group_idx = random.randint(0, len(possible_group_set[c_group_size])-1)
+        chosen_group = possible_group_set[c_group_size][c_group_idx]
+
+        # add to group set and remove from possible choices
+        chosen_group_set.append(chosen_group)
+        possible_group_set[c_group_size].remove(chosen_group)
+        if c_type == "overlapping":
+            for group in separate_groups:
+                if any([term in chosen_group for term in group]):
+                    separate_groups.remove(group)
+                    overlapping_groups.append(group)
+
+        # Remove unusable groups
+        to_be_removed = []
+        can_be_overlapped = []
+        for other_group, o_group_size in [(group, group_size) for group_size in range(len(possible_s_groups)) for group in possible_s_groups[group_size]] + [(group, group_size) for group_size in range(len(possible_o_groups)) for group in possible_o_groups[group_size]]:
+            if all([term in chosen_group for term in other_group]): # remove sub groups (also current group)
+                to_be_removed.append((o_group_size, other_group))
+            elif all([term in other_group for term in chosen_group]):  # remove parent groups
+                to_be_removed.append((o_group_size, other_group))
+            elif any([term in chosen_group for term in other_group]): # remove overlapping groups
+                to_be_removed.append((o_group_size, other_group))
+                can_be_overlapped.append((o_group_size, other_group))
+            else: # remove forming groups (groups that will be formed by combining current and other group)
+                curr_terms = set([term for group in separate_groups for term in group] + [term for group in overlapping_groups for term in group] )
+                new_terms = copy.deepcopy(curr_terms)
+                new_terms.update(set([term for term in other_group]))
+                
+
+
+                # Check if adding current group will form a new group
+                unused_groups = [g for gs in orig_groups for g in gs]
+                for g in [g for g in separate_groups] + [g for g in overlapping_groups]:
+                    unused_groups.remove(g)
+                for g in unused_groups:
+                    if  ((any([term not in other_group for term in g]) and 
+                            any([term not in curr_terms for term in g]) and 
+                            all([term in new_terms for term in g])) or
+                            all([term in new_terms for term in range(2**num_var)])):
+                        # possible_groups[o_group_size].remove(other_group)
+                        to_be_removed.append((o_group_size, other_group))
+                        for gs2, g2 in [(possible_s_groups.index(gs), g3) for gs in possible_s_groups for g3 in gs] + [(possible_o_groups.index(gs),g4) for gs in possible_o_groups for g4 in gs]:
+                            if all(term in g for term in g2):
+                                to_be_removed.append((gs2, g2))
+                        break
+                
+                # Check if adding current group will remove an existing group
+                for g in separate_groups + overlapping_groups:
+                    new_terms_2 = [term for group in separate_groups for term in group] + [term for group in overlapping_groups for term in group] 
+                    for term in g:
+                        new_terms_2.remove(term)
+                    for term in other_group:
+                        new_terms_2.append(term)
+                    new_terms_2 = set(new_terms_2)    
+                    if all([term in new_terms_2 for term in curr_terms]):
+                        to_be_removed.append((o_group_size, other_group))
+                        break
+
+        # Update possible groups by removing all to be removed groups
+        for size, term in to_be_removed:
+            if len(possible_s_groups) - 1 >= size:
+                if term in possible_s_groups[size]:
+                    possible_s_groups[size].remove(term)
+            if len(possible_o_groups) - 1 >= size:
+                if term in possible_o_groups[size]:
+                    possible_o_groups[size].remove(term)
+
+        # Update possible overlapping groups
+        for size, term in can_be_overlapped:
+            if term not in possible_o_groups[size]:
+                possible_o_groups[size].append(term)
+
+
+        # Clean up possible groups by removing empty group sizes
+        possible_s_groups = list(filter(lambda group_size: len(group_size) > 0, possible_s_groups))
+
+        num_groups -= 1
+
+    final_terms = list(set([int(term) for group in separate_groups for term in group] + [int(term) for group in overlapping_groups for term in group]))
+
+    possible_dc = [(group, group_size) for group_size in range(len(possible_s_groups)) for group in possible_s_groups[group_size]]
+    possible_dc += [(group, group_size) for group_size in range(len(possible_o_groups)) for group in possible_o_groups[group_size]]
+    dc_out_arr = []
+    if len(possible_dc) > 0:
+        dc_out_arr = random.choice(possible_dc)
+        dc_out_arr = list(filter(lambda term: term not in terms, dc_out_arr[0]))
+    
+    groups = separate_groups + overlapping_groups
+
+    for _ in range(dc_out):
+        if len(dc_out_arr) == 0:
+            break
+        dc = random.choice(dc_out_arr)
+        dc_out_arr.remove(dc)
+        dont_cares.append(int(dc))
+    dc_in = num_dc - len(dont_cares)
+    for _ in range(dc_in):
+        if len(final_terms) == 0:
+            break
+        for x in range(3):
+            dc = random.choice(final_terms)
+            if [dc in group for group in groups].count(True) >= 2:
+                break
+            else:
+                continue         
+        else:
+            break
+        final_terms.remove(dc)
+        dont_cares.append(int(dc))        
+         
+
+    # 0 - non cut group
+    # 1 - group divided into left/right
+    # 2 - group divided into top/bottom
+    # 3 - group divided into 4
+
+    match num_var:
+        case 2:
+            terms = gg.terms_2
+        case 3:
+            terms = gg.terms_3
+        case 4:
+            terms = gg.terms_4
+        case 5:
+            terms = gg.terms_5
+        case 6:
+            terms = gg.terms_6
+
+    
+    groupings = [] # [group #, type of group, kind of anchor element (0, 1, 2, 3 for top left/right, bottom left/right), index row, index col, size of vertical, size of horizontal]
+    for i in range(len(groups)):
+        group = groups[i]
+        group_indices = []
+        for term in group:
+            group_indices.extend(list(zip(*np.where(terms == term))))
+
+        row_indices = sorted(list(set([group[0] for group in group_indices])))
+        col_indices = sorted(list(set([group[1] for group in group_indices])))
+
+        group_type = 0
+        if any(row_index not in row_indices for row_index in range(min(row_indices), max(row_indices) + 1)):
+            group_type = 2
+        if any(col_index not in col_indices for col_index in range(min(col_indices), max(col_indices) + 1)):
+            if group_type == 2:
+                group_type = 3
+            else:
+                group_type = 1
+
+
+        if len(group) == 1:
+            groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
+        elif len(group) == 2:
+            if group_type == 0:
+                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
+            elif group_type == 1:
+                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
+                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
+            elif group_type == 2:
+                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
+                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
+        elif len(group) == 4:
+            if group_type == 0:
+                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
+            elif group_type == 1:
+                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 2, 1])
+                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 2, 1])
+            elif group_type == 2:
+                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 2])
+                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 2])
+            elif group_type == 3:
+                groupings.append([i, 3, 3, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
+                groupings.append([i, 3, 2, int(min(row_indices)), int(max(col_indices)), 1, 1])
+                groupings.append([i, 3, 1, int(max(row_indices)), int(min(col_indices)), 1, 1])
+                groupings.append([i, 3, 0, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
+        elif len(group) == 8:
+            if group_type == 0:
+                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
+            elif group_type == 1:
+                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 4, 1])
+                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 4, 1])
+            elif group_type == 2:
+                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 4])
+                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 4])
+
+
+
+
+    return num_var, form, final_terms, dont_cares, groupings
 
 
 
@@ -463,14 +722,17 @@ def minimizeAndCheck(
     prime_implicants = getPrimeImplicants(num_var=num_var, terms=terms, dont_cares=dont_cares, form_terms=form_terms)
     final_expressions = minimizePrimeImplicants(num_var=num_var, terms=terms, prime_implicants=prime_implicants, form_terms=form_terms)
     result = checkAnswer(minimal_expressions=final_expressions, input_answer=input_answer, form_answer=form_terms)
-    return result
+    stringified_expressions = []
+    for i in range(len(final_expressions)):
+        stringified_expressions.append(stringifyExpression(expression=final_expressions[i], form_answer=form_terms))
+    return result, stringified_expressions
 
-if __name__ == "__main__":
-    import requests
+def answerUserQuestion():
+    import requests, group_generator as gg
 
     # Running server needed!
     users = requests.get("http://localhost:8000/user").json()
-    username = "a"
+    username = "francois"
     user = next(user for user in users if user['username'] == username)
     num_var = user['q_num_var']
     terms = user['q_terms']
@@ -506,3 +768,11 @@ if __name__ == "__main__":
         print("Wrong form (SOP/POS).")
     elif result == -3:
         print("Error: please contact dev.")
+
+if __name__ == "__main__":
+    import group_generator as gg
+    answerUserQuestion()
+    # num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
+    # print("Number of variables:", num_var, "Form:", form)
+    # print("Terms:", terms)
+    # print("Don't cares", dont_cares)

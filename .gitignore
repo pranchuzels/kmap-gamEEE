@@ -8,7 +8,9 @@
 frontend/.angular/
 frontend/node_modules
 
-
+# Backend
+# backend/test.py
+backend/test*.py
 # Assets
 assets/
 

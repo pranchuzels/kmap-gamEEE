@@ -25,6 +25,8 @@ export class AppComponent implements OnInit{
   terms: number[] = [];
   dont_cares: number[] = [];
   result: number = -10;
+  groupings: number[][] = [];
+  answers: string[] = [];
 
   state: number = 0;
   constructor(private kmapGeneratorService: KmapGeneratorService) {
@@ -48,13 +50,20 @@ export class AppComponent implements OnInit{
       this.form = (item.q_form);
       this.terms = (item.q_terms);
       this.dont_cares = (item.q_dont_cares);
+      this.groupings = (item.q_groupings);
     });
 
     this.startedGame = true;
   }
 
-  checkAnswer(answer: string) {
-    const request = { username: this.username, answer: answer };
+  changeUserData(result: number): void {
+    const request = { 
+      type: 1,
+      user: {
+      username: this.username,
+      score: this.score,
+      difficulty: this.difficulty,
+      result: result}};
     this.kmapGeneratorService.postCheckAnswer(request).pipe(
       catchError(error => {
         if (error.status === 500) {
@@ -72,6 +81,35 @@ export class AppComponent implements OnInit{
         this.form = item.user.q_form;
         this.terms = item.user.q_terms;
         this.dont_cares = item.user.q_dont_cares;
+        this.groupings = item.user.q_groupings;
+      }
+    });
+  }
+
+  checkAnswer(answer: string) {
+    const request = { 
+      type: 0,
+      user: {
+      username: this.username,
+      score: this.score,
+      difficulty: this.difficulty,
+      q_num_var: this.num_var,
+      q_form: this.form,
+      q_terms: this.terms,
+      q_dont_cares: this.dont_cares,
+      q_groupings: this.groupings,
+      answer: answer} };
+    this.kmapGeneratorService.postCheckAnswer(request).pipe(
+      catchError(error => {
+        if (error.status === 500) {
+          this.result = -4; // Set a specific result value for HTTP 500 error
+        }
+        return of(null); // Return an observable with a null value
+      })
+    ).subscribe(item => {
+      if (item) {
+        this.result = item.result;
+        this.answers = item.answers;
       }
     });
   }
