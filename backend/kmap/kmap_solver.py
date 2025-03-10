@@ -80,6 +80,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         num_dc = random.randint(0, 2)
         dc_in = num_dc
         dc_out = num_dc - dc_in
+        s_o_probs = [0.75, 0.25]
 
     elif difficulty == 3:
         # For hard difficulty:
@@ -96,6 +97,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         num_dc = random.randint(1, 4)
         dc_in = random.randint(0, num_dc)
         dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
     
     elif difficulty == 4:
         # TODO: Fix random difficulty, DO NOT USE FOR ACTUAL QUESTIONS UNTIL FIXED
@@ -127,7 +129,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         elif all(len(group_sizes) == 0 for group_sizes in possible_o_groups) or (len(separate_groups) == 0 and len(overlapping_groups) == 0):
             c_type = "separate"
         else:
-            c_type = random.choice(["separate", "overlapping"])
+            c_type = npr.choice(["separate", "overlapping"], p=s_o_probs) 
 
         # Group type setter
         if c_type == "separate":
