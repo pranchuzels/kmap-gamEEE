@@ -64,6 +64,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         num_dc = 0
         dc_in = 0
         dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
         
     elif difficulty == 2:
         # For medium difficulty:
