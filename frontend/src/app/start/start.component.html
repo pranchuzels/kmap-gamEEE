@@ -11,7 +11,7 @@
           <button type="button" [ngClass]="{'selected': difficulty == 'easy'}" (click)="setDifficulty('easy')">Easy</button>
           <button type="button" [ngClass]="{'selected': difficulty == 'medium'}" (click)="setDifficulty('medium')">Medium</button>
           <button type="button" [ngClass]="{'selected': difficulty == 'hard'}" (click)="setDifficulty('hard')">Hard</button>
-          <button type="button" [ngClass]="{'selected': difficulty == 'scaling'}" (click)="setDifficulty('scaling')">Scaling</button>
+          <button type="button" [ngClass]="{'selected': difficulty == 'scaling'}" (click)="setDifficulty('scaling')">Progressive</button>
         </div>
             <button type="submit">Start</button>
             <div *ngIf="submitted && username?.errors?.['required']" class="error-message">Name is required.</div>

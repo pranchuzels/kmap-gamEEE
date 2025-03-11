@@ -9,7 +9,7 @@
 #  - check randomizer if its all 1's or 0's 
 #  - [DONE?] add checks for inputs in checkAnswer
 
-import copy, random, numpy as np, numpy.random as npr
+import copy, random, numpy as np, numpy.random as npr, re
 
 if __name__ == "__main__":
     import group_generator as gg
@@ -642,8 +642,8 @@ def checkAnswer(minimal_expressions: list[list[set[str]]], input_answer: str, fo
 
             elif form_answer == "max":
                 # Group maxterms
-                input_answer = input_answer.split(')(')
-
+                input_answer = re.split('\)\(|\(|\)', input_answer)
+                input_answer = list(filter(lambda x: x != "", input_answer))
                 # Answer check
                 if len(input_answer) == 0:
                     raise IndexError('Answer is given as SOP, not POS form.')
@@ -664,11 +664,17 @@ def checkAnswer(minimal_expressions: list[list[set[str]]], input_answer: str, fo
     
     # Checker proper
     for answer in minimal_expressions:
-        for term in input_answer:
-            if term in answer:
-                continue
+        for term in answer:
+            if len(input_answer) == 1:
+                if list(term)[0] in list(input_answer[0])[0]:
+                    continue
+                else:
+                    break
             else:
-                break
+                if term in input_answer:
+                    continue
+                else:
+                    break
         else:
             # print("Answer is right!")
             return 1
@@ -734,18 +740,19 @@ def answerUserQuestion():
     import requests, group_generator as gg
 
     # Running server needed!
-    users = requests.get("http://localhost:8000/user").json()
-    username = "francois"
-    user = next(user for user in users if user['username'] == username)
-    num_var = user['q_num_var']
-    terms = user['q_terms']
-    dont_cares = user['q_dont_cares']
-    form_terms = user['q_form']
+    # users = requests.get("http://localhost:8000/user").json()
+    # username = "francois"
+    # user = next(user for user in users if user['username'] == username)
+    
+    num_var = 2
+    terms = [0, 1, 3]
+    dont_cares = []
+    form_terms = "max"
     # num_var, form_terms, terms, dont_cares = randomizeQuestion(4)
     print("Number of variables:", num_var, "Form:", form_terms)
     print("Terms:", terms)
     print("Don't cares", dont_cares)
-    input_answer = "(A'+C+D') (A'+D+E) (A+B'+D+E') (A+C+D+E') (A+B'+C'+D'+E)"
+    input_answer = "(A)(B')()"
 
     prime_implicants = getPrimeImplicants(num_var=num_var, terms=terms, dont_cares=dont_cares, form_terms=form_terms)
     # print("Prime implicants:", prime_implicants)
