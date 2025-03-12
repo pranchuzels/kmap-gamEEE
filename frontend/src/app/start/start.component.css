@@ -96,7 +96,7 @@ button:hover {
 }
 
 .difficulty-buttons button {
-  background-color: grey;
+  background-color: rgb(101, 101, 101);
   color: white;
   border: none;
   padding: 10px 13px;
@@ -105,11 +105,34 @@ button:hover {
   cursor: pointer;
 }
 
-.difficulty-buttons button {
-  background-color: grey;
+.difficulty-buttons button#easy:hover {
+  background-color: #586a58;
 }
 
-.difficulty-buttons button.selected {
-    background-color: #6C8C6B;
+.difficulty-buttons button#easy.selected{
+  background-color: #6C8C6B;
 }
 
+.difficulty-buttons button#medium:hover{
+  background-color: #7b6b55;
+}
+
+.difficulty-buttons button#medium.selected{
+  background-color: #ae7728;
+}
+
+.difficulty-buttons button#hard:hover {
+  background-color: #776363;
+}
+
+.difficulty-buttons button#hard.selected{
+  background-color: #9a4c4c;
+}
+
+.difficulty-buttons button#scaling:hover {
+  background-color: #77627a;
+}
+
+.difficulty-buttons button#scaling.selected {
+  background-color: #9946a4;
+}

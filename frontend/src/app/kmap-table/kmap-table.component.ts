@@ -27,6 +27,7 @@ export class KmapTableComponent implements OnChanges {
   answerForm: FormGroup;
   submitted = false;
   button_text = 'Submit';
+  form_info_text = "POS format: (A)(B+C')...";
   kmap: string[][][][] = [];
   trow_indices: number[] = [];
   tcell_indices: number[] = [];
@@ -45,6 +46,13 @@ export class KmapTableComponent implements OnChanges {
     // if (!changes['username'] && this.submitted == false) {
     //   this.submitted = true;
     // }
+    if (this.form == "min"){
+      this.form_info_text = "SOP format: AB'+CD'+...";
+    }
+    else {
+      this.form_info_text = "POS format: (A)(B+C')...";
+    }
+
     if (this.result == 1 && this.submitted == false) {
       const button = document.getElementById('button');
       if (button) {

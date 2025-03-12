@@ -10,26 +10,46 @@
 }
 
 .header {
+  display: flex;
+  flex-direction: row;
   position: absolute;
   justify-self: left;
   justify-content: left;
-  align-content: end;
+  align-content: bottom;
   align-self: end;
   bottom: 1%;
   left: 1%;
   width: auto;
-  height: 10%;
+  z-index: -11;
 }
 
 .header h1 {
+  display: flex;
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: bold;
   font-size: clamp(5vh, 5vh, 5vh);
   margin: 0;
-  color: rgba(252, 255, 255, 0.06);
+  color: rgba(252, 255, 255, 0.1);
+  z-index: -10;
 
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.header h2{
+  display: flex;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: bold;
+  font-size: clamp(2vh, 2vh, 2vh);
+  color: rgba(252, 255, 255, 0.1);
+  z-index: -10;
+  margin-left: 0.9vh;
+  margin-bottom: 0.9vh;
+  align-self: end;
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
