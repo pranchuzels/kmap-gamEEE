@@ -261,17 +261,8 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
     # 2 - group divided into top/bottom
     # 3 - group divided into 4
 
-    match num_var:
-        case 2:
-            terms = gg.terms_2
-        case 3:
-            terms = gg.terms_3
-        case 4:
-            terms = gg.terms_4
-        case 5:
-            terms = gg.terms_5
-        case 6:
-            terms = gg.terms_6
+
+    terms = gg.generateTerms(num_var)
 
     
     groupings = [] # [group #, type of group, kind of anchor element (0, 1, 2, 3 for top left/right, bottom left/right), index row, index col, size of vertical, size of horizontal]

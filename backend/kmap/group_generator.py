@@ -1,8 +1,8 @@
 import numpy as np
 
-def generateGroups(num_var):
+def generateTerms(num_var):
     """
-    Generates all possible groups in a K-Map given the number of variables.
+    Generates all possible terms in a K-Map given the number of variables.
     """
 
     match num_var:
@@ -28,6 +28,14 @@ def generateGroups(num_var):
             terms = np.reshape(np.arange(2**num_var), size)
             terms[:, :, [2, 3], :] = terms[:, :, [3, 2], :]
             terms[:, :, :, [2, 3]] = terms[:, :, :, [3, 2]]
+    return terms
+
+def generateGroups(num_var):
+    """
+    Generates all possible groups in a K-Map given the number of variables.
+    """
+
+    terms = generateTerms(num_var)
 
     possible_groups = [[] for _ in range(num_var)]
 
