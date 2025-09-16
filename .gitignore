@@ -1,16 +1,14 @@
-# Git
 .git/
-
-# Visual Studio Code
 .vscode/
 
-# Frontend
 frontend/.angular/
 frontend/node_modules
 
-# Backend
-# backend/test.py
 backend/test*.py
-# Assets
+backend/env
+backend/backend/__pycache__
+.env
+
+
 assets/
 

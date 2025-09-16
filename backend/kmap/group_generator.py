@@ -1,56 +1,33 @@
-"""
-Generate all possible groups in a K-Map.
-Go through each term and use it as the topleft-most element of every group.
-"""
-
 import numpy as np
 
-terms_2 = np.array([[0, 1], 
-        [2, 3]])
-terms_3 = np.array([[0, 1, 3, 2], 
-        [4, 5, 7, 6]])
-terms_4 = np.array([[0, 1, 3, 2], 
-        [4, 5, 7, 6], 
-        [12, 13, 15, 14], 
-        [8, 9, 11, 10]])
-terms_5 = np.array([[[0, 1, 3, 2], 
-        [4, 5, 7, 6], 
-        [12, 13, 15, 14], 
-        [8, 9, 11, 10]],
-        [[16, 17, 19, 18], 
-        [20, 21, 23, 22], 
-        [28, 29, 31, 30], 
-        [24, 25, 27, 26]]])
-terms_6 = np.array([[[[0, 1, 3, 2], 
-        [4, 5, 7, 6], 
-        [12, 13, 15, 14], 
-        [8, 9, 11, 10]],
-        [[16, 17, 19, 18], 
-        [20, 21, 23, 22], 
-        [28, 29, 31, 30], 
-        [24, 25, 27, 26]]],
-        [[[32, 33, 35, 34], 
-        [36, 37, 39, 38], 
-        [44, 45, 47, 46], 
-        [40, 41, 43, 42]],
-        [[48, 49, 51, 50], 
-        [52, 53, 55, 54], 
-        [60, 61, 63, 62], 
-        [56, 57, 59, 58]]]])
-
 def generateGroups(num_var):
+    """
+    Generates all possible groups in a K-Map given the number of variables.
+    """
 
     match num_var:
-        case 2:
-            terms = terms_2
-        case 3:
-            terms = terms_3
+        case 2: 
+            size = (2, 2)
+            terms = np.reshape(np.arange(2**num_var), size)
+        case 3: 
+            size = (2, 4)
+            terms = np.reshape(np.arange(2**num_var), size)
+            terms[:, [2, 3]] = terms[:, [3, 2]]
         case 4:
-            terms = terms_4
-        case 5:
-            terms = terms_5
+            size = (4, 4)
+            terms = np.reshape(np.arange(2**num_var), size)
+            terms[[2, 3], :] = terms[[3, 2], :]
+            terms[:, [2, 3]] = terms[:, [3, 2]]
+        case 5: 
+            size = (2, 4, 4)
+            terms = np.reshape(np.arange(2**num_var), size)
+            terms[:, [2, 3], :] = terms[:, [3, 2], :]
+            terms[:, :, [2, 3]] = terms[:, :, [3, 2]]
         case 6:
-            terms = terms_6
+            size = (2, 2, 4, 4)
+            terms = np.reshape(np.arange(2**num_var), size)
+            terms[:, :, [2, 3], :] = terms[:, :, [3, 2], :]
+            terms[:, :, :, [2, 3]] = terms[:, :, :, [3, 2]]
 
     possible_groups = [[] for _ in range(num_var)]
 
