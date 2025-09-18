@@ -262,7 +262,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
     # 3 - group divided into 4
 
 
-    terms = gg.generateTerms(num_var)
+    _, terms = gg.generateTerms(num_var)
 
     
     groupings = [] # [group #, type of group, kind of anchor element (0, 1, 2, 3 for top left/right, bottom left/right), index row, index col, size of vertical, size of horizontal]
