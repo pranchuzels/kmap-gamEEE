@@ -22,15 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+# SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = "testtestestet"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'kmap-gameee-backend.vercel.app',
-    # '127.0.0.1', 
-    # 'localhost'
+    '127.0.0.1', 
+    'localhost'
     ]
 
 
@@ -61,6 +63,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     # 'http://localhost:4200',
+    'http://localhost:5173',
     'https://kmap-gameee.vercel.app'
 ]
 
