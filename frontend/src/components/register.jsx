@@ -29,7 +29,7 @@ const Register = ({ globalName, setGlobalName, setGameState }) => {
     return (
     <div>
         <label>Name: <input name="Name" onChange={e => setName(e.target.value)} className='border'></input></label>
-        <button className='border hover:bg-neutral-500 cursor-pointer' onClick={() => {createUser(name, 'easy')}}>Hello</button>
+        <button className='border hover:bg-neutral-500 cursor-pointer' onClick={() => {createUser(name, 'hard')}}>Hello</button>
         
     </div>
     )

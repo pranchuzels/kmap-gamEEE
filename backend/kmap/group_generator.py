@@ -42,6 +42,8 @@ def generateGroups(num_var):
 
     shape, terms = generateTerms(num_var)
     groups = [[] for _ in range(num_var)]
+    print(shape)
+    print(terms)
 
     # Duplicate the last row when size of dimension is 4 (for groups that wrap at the ends)
     for a in range(len(terms.shape)):
