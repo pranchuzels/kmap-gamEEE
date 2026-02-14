@@ -50,7 +50,6 @@ const Register = ({ globalName, setGlobalName, setGameState }) => {
     return (
       <div className="w-full max-w-2xl mx-auto p-8 bg-gradient-to-br from-slate-800/95 via-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-cyan-500/30">
             
-                {/* Header */}
                 <div className="text-center mb-8">
                     
                     <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300 mb-2">
@@ -79,7 +78,6 @@ const Register = ({ globalName, setGlobalName, setGameState }) => {
                     </div>
                 </div>
 
-                {/* Difficulty Selection */}
                 <div className="space-y-3">
                     <label className="block text-cyan-300 font-semibold text-sm uppercase tracking-wide my-3">
                         Select Difficulty
@@ -120,7 +118,6 @@ const Register = ({ globalName, setGlobalName, setGameState }) => {
                     </div>
                 </div>
 
-                {/* Start Button */}
                 <button
                     type="submit"
                     disabled={!name.trim()}
