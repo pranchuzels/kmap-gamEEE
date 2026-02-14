@@ -90,8 +90,8 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         # - 30/70 SOP/POS
         # - Up to 6 don't cares
         
-        # Set number of variables, groups, and form
-        num_var = 4
+        # Set number of variables, groups, and formsss
+        num_var = npr.choice([5, 6], p = [0.5, 0.5])
         num_groups = random.randint(3, 5)
         form = npr.choice(["min", "max"], p = [0.4, 0.6])
         # set dont cares
@@ -276,17 +276,17 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
 
         if len(group_indices[0]) == 3:
             group_indices = [(r, c, l) for (l, r, c) in group_indices]
+        elif len(group_indices[0]) == 4:
+            group_indices = [(r, c, lr, lc) for (lr, lc, r, c) in group_indices]
 
         # inside the group, make a subgroup based on their layer
         overall_group_indices = []
         if num_var == 6:
-            overall_group_indices = [[group for group in group_indices if (group[2] * 2 + group[3]) == i] for i in range(4)]      
-        if num_var == 5:
+            overall_group_indices = [[group for group in group_indices if group[2] * 2 + group[3] == i] for i in range(4)]      
+        elif num_var == 5:
             overall_group_indices = [[group for group in group_indices if group[2] == i] for i in range(2)]
         else:
             overall_group_indices = [group_indices]
-
-        print(overall_group_indices)
 
         for layer_idx, group_indices in enumerate(overall_group_indices):
             if len(group_indices) == 0:
