@@ -90,8 +90,8 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         # - 30/70 SOP/POS
         # - Up to 6 don't cares
         
-        # Set number of variables, groups, and form
-        num_var = 4
+        # Set number of variables, groups, and formsss
+        num_var = npr.choice([5, 6], p = [0.5, 0.5])
         num_groups = random.randint(3, 5)
         form = npr.choice(["min", "max"], p = [0.4, 0.6])
         # set dont cares
@@ -147,6 +147,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
                 break
         c_group_idx = random.randint(0, len(possible_group_set[c_group_size])-1)
         chosen_group = possible_group_set[c_group_size][c_group_idx]
+        print(chosen_group)
 
         # add to group set and remove from possible choices
         chosen_group_set.append(chosen_group)
@@ -269,58 +270,53 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
     for i in range(len(groups)):
         group = groups[i]
         group_indices = []
+        # transforming them into coordinates.
         for term in group:
             group_indices.extend(list(zip(*np.where(terms == term))))
 
-        row_indices = sorted(list(set([group[0] for group in group_indices])))
-        col_indices = sorted(list(set([group[1] for group in group_indices])))
+        if len(group_indices[0]) == 3:
+            group_indices = [(r, c, l) for (l, r, c) in group_indices]
+        elif len(group_indices[0]) == 4:
+            group_indices = [(r, c, lr, lc) for (lr, lc, r, c) in group_indices]
 
-        group_type = 0
-        if any(row_index not in row_indices for row_index in range(min(row_indices), max(row_indices) + 1)):
-            group_type = 2
-        if any(col_index not in col_indices for col_index in range(min(col_indices), max(col_indices) + 1)):
-            if group_type == 2:
-                group_type = 3
-            else:
-                group_type = 1
+        # inside the group, make a subgroup based on their layer
+        overall_group_indices = []
+        if num_var == 6:
+            overall_group_indices = [[group for group in group_indices if group[2] * 2 + group[3] == i] for i in range(4)]      
+        elif num_var == 5:
+            overall_group_indices = [[group for group in group_indices if group[2] == i] for i in range(2)]
+        else:
+            overall_group_indices = [group_indices]
 
+        for layer_idx, group_indices in enumerate(overall_group_indices):
+            if len(group_indices) == 0:
+                continue
 
-        if len(group) == 1:
-            groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
-        elif len(group) == 2:
+            row_indices =  sorted(list(set([group[0] for group in group_indices])))
+            col_indices = sorted(list(set([group[1] for group in group_indices])))
+
+            group_type = 0
+            if any(row_index not in row_indices for row_index in range(min(row_indices), max(row_indices) + 1)):
+                group_type = 2
+            if any(col_index not in col_indices for col_index in range(min(col_indices), max(col_indices) + 1)):
+                if group_type == 2:
+                    group_type = 3
+                else:
+                    group_type = 1
+
             if group_type == 0:
-                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
+                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices), layer_idx])
             elif group_type == 1:
-                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
-                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
+                groupings.append([i, 1, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)/2, layer_idx])
+                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(max(group_indices)[1]), len(row_indices), len(col_indices)/2, layer_idx])
             elif group_type == 2:
-                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
-                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
-        elif len(group) == 4:
-            if group_type == 0:
-                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
-            elif group_type == 1:
-                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 2, 1])
-                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 2, 1])
-            elif group_type == 2:
-                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 2])
-                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 2])
+                groupings.append([i, 2, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices) / 2, len(col_indices), layer_idx])
+                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(min(group_indices)[1]), len(row_indices) / 2, len(col_indices), layer_idx])
             elif group_type == 3:
-                groupings.append([i, 3, 3, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1])
-                groupings.append([i, 3, 2, int(min(row_indices)), int(max(col_indices)), 1, 1])
-                groupings.append([i, 3, 1, int(max(row_indices)), int(min(col_indices)), 1, 1])
-                groupings.append([i, 3, 0, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1])
-        elif len(group) == 8:
-            if group_type == 0:
-                groupings.append([i, 0, 0, int(min(group_indices)[0]), int(min(group_indices)[1]), len(row_indices), len(col_indices)])
-            elif group_type == 1:
-                groupings.append([i, 1, 1, int(min(group_indices)[0]), int(min(group_indices)[1]), 4, 1])
-                groupings.append([i, 1, 2, int(max(group_indices)[0]), int(max(group_indices)[1]), 4, 1])
-            elif group_type == 2:
-                groupings.append([i, 2, 2, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 4])
-                groupings.append([i, 2, 1, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 4])
-
-
+                groupings.append([i, 3, 3, int(min(group_indices)[0]), int(min(group_indices)[1]), 1, 1, layer_idx])
+                groupings.append([i, 3, 2, int(min(row_indices)), int(max(col_indices)), 1, 1, layer_idx])
+                groupings.append([i, 3, 1, int(max(row_indices)), int(min(col_indices)), 1, 1, layer_idx])
+                groupings.append([i, 3, 0, int(max(group_indices)[0]), int(max(group_indices)[1]), 1, 1, layer_idx])
 
 
     return num_var, form, final_terms, dont_cares, groupings
@@ -772,8 +768,8 @@ def answerUserQuestion():
 
 if __name__ == "__main__":
     import group_generator as gg
-    answerUserQuestion()
-    # num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
-    # print("Number of variables:", num_var, "Form:", form)
-    # print("Terms:", terms)
-    # print("Don't cares", dont_cares)
+    # answerUserQuestion()
+    num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
+    print("Number of variables:", num_var, "Form:", form)
+    print("Terms:", terms)
+    print("Don't cares", dont_cares)
