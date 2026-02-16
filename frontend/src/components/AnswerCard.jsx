@@ -12,7 +12,7 @@ const AnswerCard = ({ onSubmit, gameState, setGlobalState, globalState, setGameS
 
         } else {
             try {
-                const response = await fetch("http://127.0.0.1:8000/game", {
+                const response = await fetch("https://kmap-gameee-backend.vercel.app/game", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
