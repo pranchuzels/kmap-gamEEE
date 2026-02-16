@@ -653,7 +653,7 @@ def checkAnswer(minimal_expressions: list[list[set[str]]], input_answer: str, fo
     for answer in minimal_expressions:
         for term in answer:
             if len(input_answer) == 1:
-                if list(term)[0] in list(input_answer[0])[0]:
+                if len(term) == len(input_answer) and list(term)[0] in list(input_answer[0])[0]:
                     continue
                 else:
                     break
@@ -732,14 +732,14 @@ def answerUserQuestion():
     # user = next(user for user in users if user['username'] == username)
     
     num_var = 2
-    terms = [0, 1, 3]
+    terms = [2]
     dont_cares = []
-    form_terms = "max"
+    form_terms = "min"
     # num_var, form_terms, terms, dont_cares = randomizeQuestion(4)
     print("Number of variables:", num_var, "Form:", form_terms)
     print("Terms:", terms)
     print("Don't cares", dont_cares)
-    input_answer = "(A)(B')()"
+    input_answer = "A"
 
     prime_implicants = getPrimeImplicants(num_var=num_var, terms=terms, dont_cares=dont_cares, form_terms=form_terms)
     # print("Prime implicants:", prime_implicants)
@@ -768,8 +768,8 @@ def answerUserQuestion():
 
 if __name__ == "__main__":
     import group_generator as gg
-    # answerUserQuestion()
-    num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
-    print("Number of variables:", num_var, "Form:", form)
-    print("Terms:", terms)
-    print("Don't cares", dont_cares)
+    answerUserQuestion()
+    # num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
+    # print("Number of variables:", num_var, "Form:", form)
+    # print("Terms:", terms)
+    # print("Don't cares", dont_cares)
