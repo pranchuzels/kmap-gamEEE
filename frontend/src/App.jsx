@@ -26,7 +26,7 @@ function App() {
         <AnswerCard gameState={gameState} setGlobalState={setGlobalState} globalState={globalState} setGameState={setGameState}/>}
         
        <img
-        src="public/logo.png"
+        src="logo.png"
         alt="Logo"
         className="absolute bottom-0 right-0 
                   w-[40vw] max-w-md
