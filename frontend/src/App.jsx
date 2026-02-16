@@ -33,10 +33,11 @@ function App() {
                   opacity-10
                   pointer-events-none select-none grayscale invert"
       />
-      <div className="absolute bottom-5 left-6 
+      <div className="absolute bottom-1 left-6 
                       text-slate-400 text-5xl 
-                      opacity-20 select-none">
-        Kmap GamEEE <span className='text-2xl'>by Francois Abadejos </span>
+                      opacity-20 select-none grid grid-rows-2">
+        <a>Kmap GamEEE</a>
+        <a className='text-2xl'>by Francois Abedejos | <span className='text-xl'>Updated by Shaira Rodriguez</span> </a>
       </div>
 
       </div>

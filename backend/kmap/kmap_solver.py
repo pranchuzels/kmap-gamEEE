@@ -147,7 +147,7 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
                 break
         c_group_idx = random.randint(0, len(possible_group_set[c_group_size])-1)
         chosen_group = possible_group_set[c_group_size][c_group_idx]
-        print(chosen_group)
+        # print(chosen_group)
 
         # add to group set and remove from possible choices
         chosen_group_set.append(chosen_group)
