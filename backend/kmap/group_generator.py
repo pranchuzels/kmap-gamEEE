@@ -19,8 +19,10 @@ def generateTerms(num_var):
         case 4:
             shape = (4, 4)
             terms = np.reshape(np.arange(2**num_var), shape)
+            print(terms)
             terms[[2, 3], :] = terms[[3, 2], :]
             terms[:, [2, 3]] = terms[:, [3, 2]]
+            print(terms.T)
         case 5: 
             shape = (2, 4, 4)
             terms = np.reshape(np.arange(2**num_var), shape)
@@ -70,7 +72,8 @@ if __name__ == "__main__":
     
     # Test code
     num_var = 5
-    possible_groups = generateGroups(num_var)
-    for i in range(len(possible_groups)):
-        print(f"Group size {i}")
-        print(sorted(possible_groups[i], key=lambda x: sorted(list(x))), "\n")
+    print(generateTerms(4))
+    # possible_groups = generateGroups(num_var)
+    # for i in range(len(possible_groups)):
+    #     print(f"Group size {i}")
+    #     print(sorted(possible_groups[i], key=lambda x: sorted(list(x))), "\n")

@@ -355,6 +355,7 @@ def getPrimeImplicants(num_var: int,
         merged_terms[count].append(term)
 
     merged_terms = list(filter(lambda b: b, merged_terms)) # Remove groups with no terms
+    # print(merged_terms)
 
     # print("Current merged minterms:", merged_terms)
 
@@ -412,6 +413,7 @@ def getPrimeImplicants(num_var: int,
             merged_terms = new_merged_terms
             merged_terms = list(filter(lambda b: b, merged_terms)) # Remove groups with no terms
 
+    # print(prime_implicants)
     return prime_implicants
 
 
@@ -558,10 +560,24 @@ def minimizePrimeImplicants(num_var: int,
     # Get the smallest length groups
     min_length = min(len(x) for x in new_min_exp)
     minimal_expressions = list(filter(lambda x: len(x) == min_length, new_min_exp))
+    # print(f"Minimal expression: {minimal_expressions}")
 
     # Get final expression from literals
     final_expressions = []
     terms = [chr(65+x) for x in range(num_var)]
+
+    # brute force switching T_T sorry AHAHHA
+    if num_var == 2:
+        terms[0], terms[1] = terms[1], terms[0]
+    elif num_var == 3:
+        terms[0], terms[1], terms[2] = terms[2], terms[0], terms[1]
+    elif num_var == 4:
+        terms[0:2], terms[2:4] = terms[2:4], terms[0:2]
+    elif num_var == 5:
+        terms[1:3], terms[3:5] = terms[3:5], terms[1:3]
+    elif num_var == 6:
+        terms[0], terms[1], terms[2:4], terms[4:6] = terms[1], terms[0], terms[4:6], terms[2:4]
+    # print(f"Terms: {terms}")
     for answer in minimal_expressions:
         curr_answer = []
         for group in answer:
@@ -731,8 +747,8 @@ def answerUserQuestion():
     # username = "francois"
     # user = next(user for user in users if user['username'] == username)
     
-    num_var = 2
-    terms = [2]
+    num_var = 6
+    terms = [41]
     dont_cares = []
     form_terms = "min"
     # num_var, form_terms, terms, dont_cares = randomizeQuestion(4)

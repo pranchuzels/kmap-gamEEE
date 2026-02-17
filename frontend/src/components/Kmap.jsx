@@ -2,7 +2,7 @@ import React from 'react'
 
 const Kmap = ({dont_cares, form, num_var, terms, groupings, globalState}) => {
 
-    console.log(groupings)
+    // console.log(groupings)
 
     const sizeMap = {
         5: "grid grid-cols-2 gap-6",
@@ -57,11 +57,11 @@ const Kmap = ({dont_cares, form, num_var, terms, groupings, globalState}) => {
     }
 
     const varPrint = {
-        2: "A\\B",
-        3: "A\\BC",
-        4: "AB\\CD",
-        5: "BC\\DE",
-        6: "CD\\EF"
+        2: "B\\A",
+        3: "C\\AB",
+        4: "CD\\AB",
+        5: "DE\\BC",
+        6: "EF\\CD"
     }
 
     const borderOpts = {
@@ -87,7 +87,7 @@ const Kmap = ({dont_cares, form, num_var, terms, groupings, globalState}) => {
         const newDontCares = [];
         const mainVal = form === "min" ? "1" : "0";
         const otherVal = form === "min" ? "0" : "1";
-        console.log(terms)
+        // console.log(terms)
 
         for (const term of terms){
             const binaryTerm = (term % 16).toString(2).padStart(Math.min(num_var, 4), '0');
@@ -224,7 +224,7 @@ const Kmap = ({dont_cares, form, num_var, terms, groupings, globalState}) => {
                 {(num_var == 6) &&
                 <>
                     <div className='flex items-center justify-center text-lg font-bold text-cyan-300 bg-slate-800/60 backdrop-blur rounded-xl shadow-lg border-2 border-cyan-500/30 p-3'>
-                        A\B
+                        B\A
                     </div>
                     <div className='bg-slate-800/60 backdrop-blur rounded-xl shadow-lg border-2 border-slate-700/50'>
                         <div className='grid grid-cols-2 justify-items-center gap-4'>
