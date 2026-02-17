@@ -667,11 +667,14 @@ def checkAnswer(minimal_expressions: list[list[set[str]]], input_answer: str, fo
     
     # Checker proper
     for answer in minimal_expressions:
+        # print(answer)
         for term in answer:
+            # print(term)
             if len(input_answer) == 1:
-                if len(term) == len(input_answer) and list(term)[0] in list(input_answer[0])[0]:
+                if len(term) == len(input_answer[0]) and list(term)[0] in list(input_answer[0])[0]:
                     continue
                 else:
+                    print("oh no")
                     break
             else:
                 if term in input_answer:
@@ -747,15 +750,15 @@ def answerUserQuestion():
     # username = "francois"
     # user = next(user for user in users if user['username'] == username)
     
-    num_var = 6
-    terms = [41]
+    num_var = 2
+    terms = [2]
     dont_cares = []
-    form_terms = "min"
+    form_terms = "max"
     # num_var, form_terms, terms, dont_cares = randomizeQuestion(4)
     print("Number of variables:", num_var, "Form:", form_terms)
     print("Terms:", terms)
     print("Don't cares", dont_cares)
-    input_answer = "A"
+    input_answer = "A+B'"
 
     prime_implicants = getPrimeImplicants(num_var=num_var, terms=terms, dont_cares=dont_cares, form_terms=form_terms)
     # print("Prime implicants:", prime_implicants)
