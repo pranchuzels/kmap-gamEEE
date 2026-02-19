@@ -620,10 +620,13 @@ def checkAnswer(minimal_expressions: list[list[set[str]]], input_answer: str, fo
     """
     # Input parser
     try:
-        if all(char in ['A', 'B', 'C', 'D', 'E', 'F', '\'', ' ', '(', ')', '+'] for char in input_answer) == False: 
+        if all(char in ['A', 'B', 'C', 'D', 'E', 'F', '\'', ' ', '(', ')', '+', '', '\u2018', '\u0027', '\u2019'] for char in input_answer) == False: 
             raise ValueError('Answer contains other characters besides ABCD\'()+.')
         else:
             input_answer = input_answer.replace(' ', '')
+            input_answer = input_answer.replace('\u2018', '\'')
+            input_answer = input_answer.replace('\u0027', '\'')
+            input_answer = input_answer.replace('\u2019', '\'')
             if form_answer == "min":
                 # Group minterms
                 input_answer = input_answer.replace("(", '').replace(")", '').split('+')
@@ -758,7 +761,7 @@ def answerUserQuestion():
     print("Number of variables:", num_var, "Form:", form_terms)
     print("Terms:", terms)
     print("Don't cares", dont_cares)
-    input_answer = "A+B'"
+    input_answer = "A+B‘"
 
     prime_implicants = getPrimeImplicants(num_var=num_var, terms=terms, dont_cares=dont_cares, form_terms=form_terms)
     # print("Prime implicants:", prime_implicants)
@@ -787,6 +790,7 @@ def answerUserQuestion():
 
 if __name__ == "__main__":
     import group_generator as gg
+    # print('\u2018')
     answerUserQuestion()
     # num_var, form, terms, dont_cares, groupings = randomizeQuestion(3)
     # print("Number of variables:", num_var, "Form:", form)
