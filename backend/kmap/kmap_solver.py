@@ -74,14 +74,14 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         # - Up to 2 don't cares
 
         # Set number of variables, groups, and form
-        num_var = npr.choice([3, 4], p = [0.5, 0.5])
-        num_groups = random.randint(2, 4)
+        num_var = npr.choice([3, 4], p = [0.3, 0.7])
+        num_groups = random.randint(2, 2**(num_var-1))
         form = npr.choice(["min", "max"], p = [0.5, 0.5])
         # set dont cares
-        num_dc = random.randint(0, 2)
+        num_dc = random.randint(0, 6)
         dc_in = num_dc
         dc_out = num_dc - dc_in
-        s_o_probs = [0.75, 0.25]
+        s_o_probs = [0.5, 0.5]
 
     elif difficulty == 3:
         # For hard difficulty:
@@ -92,10 +92,10 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
         
         # Set number of variables, groups, and formsss
         num_var = npr.choice([5, 6], p = [0.5, 0.5])
-        num_groups = random.randint(3, 5)
-        form = npr.choice(["min", "max"], p = [0.4, 0.6])
+        num_groups = random.randint(3, 2**(num_var-1))
+        form = npr.choice(["min", "max"], p = [0.6, 0.4])
         # set dont cares
-        num_dc = random.randint(1, 4)
+        num_dc = random.randint(1, 10)
         dc_in = random.randint(0, num_dc)
         dc_out = num_dc - dc_in
         s_o_probs = [0.5, 0.5]
@@ -245,16 +245,24 @@ def randomizeQuestion(difficulty: int) -> tuple[int, str, list[int], list[int]]:
     for _ in range(dc_in):
         if len(final_terms) == 0:
             break
-        for x in range(3):
-            dc = random.choice(final_terms)
-            if [dc in group for group in groups].count(True) >= 2:
-                break
-            else:
-                continue         
-        else:
+        can_dc_terms = [[x in group for group in groups].count(True) >= 2 for x in final_terms]
+        if can_dc_terms.count(True) == 0:
             break
-        final_terms.remove(dc)
-        dont_cares.append(int(dc))        
+        else:
+            dc_idx = random.choice([i for i, val in enumerate(can_dc_terms) if val])
+            dc = final_terms[dc_idx]
+            final_terms.pop(dc_idx)
+            dont_cares.append(int(dc)) 
+                
+        # for x in range(3):
+        #     dc = random.choice(final_terms)
+        #     if [dc in group for group in groups].count(True) >= 2:
+        #         break
+        #     else:
+        #         continue         
+        # else:
+        #     break
+               
          
 
     # 0 - non cut group
