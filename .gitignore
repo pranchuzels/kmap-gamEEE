@@ -1,14 +1,15 @@
 .git/
 .vscode/
 
+__pycache__/
+
 frontend/.angular/
 frontend/node_modules
 
 backend/test*.py
 backend/env
-backend/backend/__pycache__
+backend/kmap/__pycache__
 .env
-
 
 assets/
 
