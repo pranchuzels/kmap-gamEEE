@@ -27,7 +27,7 @@ const Register = ({ globalName, setGlobalName, setGameState }) => {
 
     const createUser = async (username, difficulty) => {
         try {
-            const response = await fetch("https://kmap-gameee-backend.vercel.app/user", {
+            const response = await fetch("/kmapgameee/api/user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -24,7 +24,7 @@ const AnswerCard = ({ onSubmit, gameState, setGlobalState, globalState, setGameS
             setErrorS(true);
         } else {
             try {
-                const response = await fetch("https://kmap-gameee-backend.vercel.app/game", {
+                const response = await fetch("/kmapgameee/api/game", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ type: type, user: userData }),

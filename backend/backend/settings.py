@@ -32,7 +32,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'kmap-gameee-backend.vercel.app',
     '127.0.0.1', 
-    'localhost'
+    'localhost',
+    'digital.eee.upd.edu.ph'
     ]
 
 
@@ -62,9 +63,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    # 'http://localhost:4200',
-    'http://localhost:5173',
-    'https://kmap-gameee.vercel.app'
+    'http://localhost:5183',
+    'https://kmap-gameee.vercel.app',
+    'https://digital.eee.upd.edu.ph'
 ]
 
 ROOT_URLCONF = 'backend.urls'
