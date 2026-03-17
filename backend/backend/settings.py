@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         "ALLOWED_HOSTS",
-        "127.0.0.1,localhost,kmap-gameee-isaac-backend.vercel.app",
+        "127.0.0.1,localhost,kmap-gameee-backend.vercel.app",
     ).split(",")
     if host.strip()
 ]
@@ -68,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ALLOWED_ORIGINS",
-        "http://localhost:5173,https://kmap-gameee-isaac.vercel.app",
+        "http://localhost:5173,https://kmap-gameee.vercel.app",
     ).split(",")
     if origin.strip()
 ]
