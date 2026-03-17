@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react'
 import { apiUrl } from '../config/api';
 
 
-const TIME_LIMIT = 30;
-
+const DEFAULT_TIME_LIMIT = 30;
+const getInitialTimeLimit = (state) => {
+    const candidate = Number(state?.time_remaining);
+    return Number.isFinite(candidate) && candidate > 0 ? candidate : DEFAULT_TIME_LIMIT;
+};
 
 const TimeAttackCard = ({ gameState, setGlobalState, globalState, setGameState, setIsMapLoading, isMapLoading }) => {
     const [answer, setAnswer] = useState('');
     const [errorS, setErrorS] = useState(false);
     const [response, setResponse] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [timeRemaining, setTimeRemaining] = useState(TIME_LIMIT);
+    const [timeRemaining, setTimeRemaining] = useState(() => getInitialTimeLimit(gameState));
     const [questionsAnswered, setQuestionsAnswered] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [isValid, setIsValid] = useState(true);
     const [resultVisible, setResultVisible] = useState(false);
     const [leaderboard, setLeaderboard] = useState([]);
     const blockClipboard = (e) => e.preventDefault();
+
+    useEffect(() => {
+        setTimeRemaining(getInitialTimeLimit(gameState));
+    }, [gameState?.username, gameState?.difficulty, gameState?.time_remaining]);
 
     // Timer
     useEffect(() => {

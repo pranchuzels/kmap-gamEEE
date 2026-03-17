@@ -11,7 +11,9 @@ import pytz
 import re
 
 
-TIME_LIMIT = 30
+TIME_LIMIT_EASY = 60
+TIME_LIMIT_MEDIUM = 180
+TIME_LIMIT_HARD = 300
 BLOCKED_USERNAME_TERMS = (
     "fuck",
     "shit",
@@ -1030,12 +1032,19 @@ class StartTimeAttack(APIView):
         
         # Generate first question
         num_var, form, terms, dont_cares, groupings = kmap_solver.randomizeQuestion(difficulty=difficulty, num_dc_override=num_dc_override)
+        if difficulty == 1:
+            time_limit = TIME_LIMIT_EASY
+        elif difficulty == 2:
+            time_limit = TIME_LIMIT_MEDIUM
+        else:
+            time_limit = TIME_LIMIT_HARD
         
+
         return Response({
             'username': username,
             'difficulty': difficulty,
             'questions_solved': 0,
-            'time_remaining': TIME_LIMIT,
+            'time_remaining': time_limit,
             'q_num_var': num_var,
             'q_form': form,
             'q_terms': terms,

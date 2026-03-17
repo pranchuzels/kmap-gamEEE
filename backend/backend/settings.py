@@ -23,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ['SECRET_KEY']
 SECRET_KEY = os.getenv("SECRET_KEY", "testtestestet")
 
 
@@ -34,7 +33,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         "ALLOWED_HOSTS",
-        "127.0.0.1,localhost,kmapback.vercel.app",
+        "127.0.0.1,localhost,kmap-gameee-isaac-backend.vercel.app",
     ).split(",")
     if host.strip()
 ]
@@ -69,7 +68,7 @@ CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ALLOWED_ORIGINS",
-        "http://localhost:5173,https://kmaptime.vercel.app",
+        "http://localhost:5173,https://kmap-gameee-isaac.vercel.app",
     ).split(",")
     if origin.strip()
 ]
@@ -150,6 +149,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

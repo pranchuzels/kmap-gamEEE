@@ -51,75 +51,75 @@ def randomizeQuestion(difficulty: int, num_dc_override: int | None = None) -> tu
     dont_cares = []
 
     if difficulty == 1:
-        # For easy difficulty:
-        # - Expressions only up to 3 terms
-        # - Either 2, 3, 4 variables with p = [0.3, 0.4, 0.3] respectively
-        # - No multiple answers (hopefully?)
-        # - Mostly SOP
-        # - No don't cares
 
         # Set number of variables, groups, and form
-        num_var = npr.choice([2, 3], p = [0.5, 0.5])
-        num_groups = random.randint(1, 2 if num_var == 2 else 3)
+        num_var = npr.choice([2, 3], p = [0.4, 0.6])
+        num_groups = random.randint(1, 2 if num_var == 2 else 4)
         form = npr.choice(["min", "max"], p = [0.7, 0.3])
         # set dont cares
-        num_dc = 0
-        if num_dc_override is not None:
-            num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
-        dc_in = 0
-        dc_out = num_dc - dc_in
-        s_o_probs = [0.5, 0.5]
-        
-    elif difficulty == 2:
-        # For medium difficulty:
-        # - 3 or 4 variables with p = [0.25, 0.75]
-        # - Expressions from 3 to 4 terms
-        # - 50/50 SOP/POS
-        # - Up to 2 don't cares
-
-        # Set number of variables, groups, and form
-        num_var = npr.choice([3, 4], p = [0.3, 0.7])
-        num_groups = random.randint(2, 2**(num_var-1))
-        form = npr.choice(["min", "max"], p = [0.5, 0.5])
-        # set dont cares
-        num_dc = random.randint(0, 6)
-        if num_dc_override is not None:
-            num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
-        dc_in = num_dc
-        dc_out = num_dc - dc_in
-        s_o_probs = [0.5, 0.5]
-
-    elif difficulty == 3:
-        # For hard difficulty:
-        # - 4 or 5 variables with p = [0.7, 0.3]
-        # - Groups up to 4 - 6 terms (or as much as possible)
-        # - 30/70 SOP/POS
-        # - Up to 6 don't cares
-        
-        # Set number of variables, groups, and formsss
-        num_var = npr.choice([5, 6], p = [0.5, 0.5])
-        num_groups = random.randint(3, 2**(num_var-1))
-        form = npr.choice(["min", "max"], p = [0.6, 0.4])
-        # set dont cares
-        num_dc = random.randint(1, 10)
+        num_dc = random.randint(0, 1)
         if num_dc_override is not None:
             num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
         dc_in = random.randint(0, num_dc)
         dc_out = num_dc - dc_in
         s_o_probs = [0.5, 0.5]
-    
-    elif difficulty == 4:
-        # TODO: Fix random difficulty, DO NOT USE FOR ACTUAL QUESTIONS UNTIL FIXED
-        num_var = random.randint(4, 6)
-        terms = sorted(npr.choice(range(2**num_var), size=random.randint(int((2**num_var)/8), int((2**num_var)/2)), replace=False).tolist())
-        num_dc = random.randint(0, 3)
+        
+    elif difficulty == 2:
+
+        # Set number of variables, groups, and form
+        num_var = npr.choice([4, 5], p = [0.7, 0.3])
+        # num_groups = random.randint(2, 2**(num_var-1) if num_var == 4 else 4)
+        num_groups = npr.choice([2, 3, 4, 5], p = [0.1, 0.35, 0.35, 0.2])
+        form = npr.choice(["min", "max"], p = [0.65, 0.35])
+        # set dont cares
+        num_dc = random.randint(0, 4)
         if num_dc_override is not None:
             num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
-        if num_dc != 0:
-            dont_cares = sorted(npr.choice(terms, size=min(num_dc, len(terms)-1), replace=False).tolist())
-            for dc in dont_cares:
-                terms.remove(dc)
-        form = random.choice(["min", "max"])
+        dc_in = random.randint(0, num_dc)
+        dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
+
+    elif difficulty == 3:
+        
+        # Set number of variables, groups, and formsss
+        num_var = npr.choice([5, 6], p = [0.6, 0.4])
+        num_groups = npr.choice([3, 4, 5, 6], p = [0.2, 0.3, 0.35, 0.15])
+        form = npr.choice(["min", "max"], p = [0.6, 0.4])
+        # set dont cares
+        num_dc = random.randint(1, 6)
+        if num_dc_override is not None:
+            num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
+        dc_in = random.randint(1, num_dc)
+        dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
+    
+    elif difficulty == 4:
+        # Extreme difficulty (only 6-vars)
+        # Set number of variables, groups, and formsss
+        num_var = 6
+        num_groups = npr.choice([4, 5, 6], p = [0.35, 0.35, 0.3])
+        form = npr.choice(["min", "max"], p = [0.35, 0.65])
+        # set dont cares
+        num_dc = random.randint(3, 8)
+        if num_dc_override is not None:
+            num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
+        dc_in = random.randint(int(num_dc/2), num_dc)
+        dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
+
+
+    elif difficulty == 5:
+        # Truly random difficulty
+        num_var = random.randint(2, 6)
+        num_groups = random.randint(1, 2**(num_var-1))
+        form = npr.choice(["min", "max"])
+        # set dont cares
+        num_dc = random.randint(0, 2**(num_var-2))
+        if num_dc_override is not None:
+            num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
+        dc_in = random.randint(0, num_dc)
+        dc_out = num_dc - dc_in
+        s_o_probs = [0.5, 0.5]
 
     separate_groups = []
     overlapping_groups = []
