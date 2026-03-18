@@ -89,7 +89,7 @@ def randomizeQuestion(difficulty: int, num_dc_override: int | None = None) -> tu
         num_dc = random.randint(1, 6)
         if num_dc_override is not None:
             num_dc = max(0, min(int(num_dc_override), (2**num_var) - 1))
-        dc_in = random.randint(1, num_dc)
+        dc_in = random.randint(0 if num_dc == 0 else 1, num_dc)
         dc_out = num_dc - dc_in
         s_o_probs = [0.5, 0.5]
     
