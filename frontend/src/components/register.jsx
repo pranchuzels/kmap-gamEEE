@@ -17,7 +17,7 @@ const Register = ({ globalName, setGlobalName, setGameState, setIsMapLoading, is
         ],
         practice: [
             { value: 'easy', label: 'Easy', color: 'emerald', description: '2-3 variables' },
-            { value: 'medium', label: 'Medium', color: 'cyan', description: '3-4 variables' },
+            { value: 'medium', label: 'Medium', color: 'cyan', description: '4-5 variables' },
             { value: 'hard', label: 'Hard', color: 'amber', description: '5-6 variables' },
             { value: 'progressive', label: 'Progressive', color: 'purple', description: 'Adaptive difficulty' }
         ],
