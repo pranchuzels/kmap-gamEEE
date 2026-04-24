@@ -1,5 +1,5 @@
 services:
-  client:
+  kmap-gamEEE-client:
     restart: unless-stopped
     build:
       context: ./frontend
@@ -17,7 +17,7 @@ services:
       - "traefik.http.routers.kmapgameee-client.entrypoints=web"
       - "traefik.http.services.kmapgameee-client.loadbalancer.server.port=5183"
     command: ["npm", "run", "dev"]
-  server:
+  kmap-gamEEE-server:
     restart: unless-stopped
     build:
       context: ./backend
