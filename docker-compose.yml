@@ -1,5 +1,6 @@
 services:
   client:
+    restart: unless-stopped
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -17,6 +18,7 @@ services:
       - "traefik.http.services.kmapgameee-client.loadbalancer.server.port=5183"
     command: ["npm", "run", "dev"]
   server:
+    restart: unless-stopped
     build:
       context: ./backend
       dockerfile: Dockerfile
