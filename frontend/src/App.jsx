@@ -3,6 +3,9 @@ import './App.css'
 import Register from './components/register.jsx'
 import Kmap from './components/Kmap.jsx';
 import AnswerCard from './components/AnswerCard.jsx';
+import TimeAttackCard from './components/TimeAttackCard.jsx';
+import About from './components/About.jsx';
+import TutorialPanel from './components/TutorialPanel.jsx';
 
 function App() {
   const [globalName, setGlobalName] = useState('');
@@ -10,6 +13,9 @@ function App() {
   const [globalState, setGlobalState] = useState('hide');
   const [mapKey, setMapKey] = useState(0);
   const [slideDir, setSlideDir] = useState('in');
+  const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(true);
+  const [showAbout, setShowAbout] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(false);
   const prevGameState = useRef(null);
 
   useEffect(() => {
@@ -55,22 +61,50 @@ function App() {
       `}</style>
 
       
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center relative justify-center p-6">
+      {showAbout && globalName === '' ? (
+        <About onBack={() => setShowAbout(false)} />
+      ) : (
+      <div className={`min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex relative justify-center p-6 ${
+        gameState?.is_tutorial ? 'items-start pt-10 sm:pt-12' : 'items-center'
+      }`}>
+
+        {globalName === '' && (
+          <button
+            type="button"
+            onClick={() => setShowAbout(true)}
+            className="absolute top-4 right-6 px-4 py-2 rounded-lg border border-cyan-500/40 text-cyan-200 hover:bg-cyan-900/20 transition z-10"
+          >
+            About
+          </button>
+        )}
+
+        {globalName === '' && isMapLoading && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm">
+            <div className="flex items-center gap-3 text-cyan-200">
+              <div className="h-6 w-6 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+              <span className="text-base sm:text-lg font-semibold">Generating K‑Map…</span>
+            </div>
+          </div>
+        )}
 
         {globalName === '' ? (
           <Register
             globalName={globalName}
             setGlobalName={setGlobalName}
             setGameState={setGameState}
+            setIsMapLoading={setIsMapLoading}
+            isMapLoading={isMapLoading}
           />
         ) : (
           
-          <div className="absolute flex flex-col lg:flex-row items-center z-3 justify-center gap-8 w-full">
+          <div className={`absolute flex flex-col lg:flex-row z-3 justify-center gap-8 w-full ${
+            gameState?.is_tutorial ? 'items-start' : 'items-center'
+          }`}>
 
             
             <div
               key={mapKey}
-              className={`flex-none ${slideDir === 'in' ? 'kmap-slide-in' : 'kmap-slide-out'}`}
+              className={`flex-none relative ${gameState?.is_tutorial ? '' : (slideDir === 'in' ? 'kmap-slide-in' : 'kmap-slide-out')}`}
             >
               <Kmap
                 dont_cares={gameState.q_dont_cares}
@@ -79,7 +113,33 @@ function App() {
                 terms={gameState.q_terms}
                 groupings={gameState.q_groupings}
                 globalState={globalState}
+                showGroupings={gameState?.difficulty !== 4 || globalState !== 'show' || isLastAnswerCorrect}
+                forceGroupings={gameState?.is_tutorial || false}
+                cellValues={gameState?.is_tutorial ? gameState.tutorial_cells : undefined}
+                disableCells={gameState?.is_tutorial ? gameState.tutorial_busy : false}
+                onToggleCell={gameState?.is_tutorial ? (index => {
+                  if (gameState.tutorial_busy) {
+                    return;
+                  }
+                  const nextCells = [...gameState.tutorial_cells];
+                  const current = nextCells[index];
+                  const nextVal = current === 0 ? 1 : current === 1 ? "x" : 0;
+                  nextCells[index] = nextVal;
+
+                  setGameState({
+                    ...gameState,
+                    tutorial_cells: nextCells,
+                  });
+                }) : undefined}
               />
+              {isMapLoading && !gameState?.is_tutorial && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-slate-900/70 backdrop-blur-sm">
+                  <div className="flex items-center gap-3 text-cyan-200">
+                    <div className="h-5 w-5 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+                    <span className="text-sm sm:text-base">Generating K‑Map…</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             
@@ -87,12 +147,31 @@ function App() {
 
         
             <div className="flex-none w-full max-w-md card-fade-in mb-10">
-              <AnswerCard
-                gameState={gameState}
-                setGlobalState={setGlobalState}
-                globalState={globalState}
-                setGameState={setGameState}
-              />
+              {gameState?.is_tutorial ? (
+                <TutorialPanel
+                  gameState={gameState}
+                  setGameState={setGameState}
+                />
+              ) : gameState?.is_time_attack ? (
+                <TimeAttackCard
+                  gameState={gameState}
+                  setGlobalState={setGlobalState}
+                  globalState={globalState}
+                  setGameState={setGameState}
+                  setIsMapLoading={setIsMapLoading}
+                  isMapLoading={isMapLoading}
+                />
+              ) : (
+                <AnswerCard
+                  gameState={gameState}
+                  setGlobalState={setGlobalState}
+                  globalState={globalState}
+                  setGameState={setGameState}
+                  setIsLastAnswerCorrect={setIsLastAnswerCorrect}
+                  setIsMapLoading={setIsMapLoading}
+                  isMapLoading={isMapLoading}
+                />
+              )}
             </div>
           </div>
         )}
@@ -107,10 +186,11 @@ function App() {
         <div className="absolute fixed bottom-4 left-6 text-slate-400 opacity-20 z-0 select-none leading-tight">
           <div className="text-lg md:text-5xl font-bold">Kmap GamEEE</div>
           <div className="text-xs md:text-2xl">
-            by Francois Abedejos | Updated by Shaira Rodriguez
+            by Francois Abedejos | Updated by Shaira Rodriguez & Isaac Sy
           </div>
         </div>
       </div>
+      )}
     </>
   );
 }
