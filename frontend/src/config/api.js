@@ -1,5 +1,29 @@
-const RAW_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://kmap-gameee-backend.vercel.app";
+// frontend/src/config/api.js
 
-export const API_BASE_URL = RAW_API_BASE_URL.replace(/\/+$/, "");
+const getBaseUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL) {
+        return import.meta.env.VITE_API_BASE_URL;
+    }
 
-export const apiUrl = (path) => `${API_BASE_URL}${path}`;
+    const hostname = window.location.hostname;
+
+    if (hostname.includes('vercel.app')) {
+        return "https://kmap-gameee-backend.vercel.app";
+        
+    } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return "http://localhost:5173";
+        
+    } else {
+        return "/kmapgameee/api";
+    }
+};
+
+const RAW_API_BASE_URL = getBaseUrl();
+
+/**
+ * Appends the endpoint to the dynamically detected base API URL.
+ */
+export const apiUrl = (endpoint) => {
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    return `${RAW_API_BASE_URL}${cleanEndpoint}`;
+};

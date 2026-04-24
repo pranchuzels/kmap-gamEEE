@@ -1,0 +1,44 @@
+services:
+  kmap-game-client:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app/client
+      - /app/client/node_modules
+    expose:
+      - "5183"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kmapgameee-client.rule=PathPrefix(`/kmapgameee`)"
+      - "traefik.http.routers.kmapgameee-client.entrypoints=web"
+      - "traefik.http.services.kmapgameee-client.loadbalancer.server.port=5183"
+    command: ["npm", "run", "dev"]
+  kmap-game-server:
+    restart: unless-stopped
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app/server
+      - ./exercises:/app/exercises
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server.rule=PathPrefix(`/kmapgameee/api`)"
+      - "traefik.http.routers.server.entrypoints=web"
+      - "traefik.http.routers.server.middlewares=server-stripprefix"
+      - "traefik.http.middlewares.server-stripprefix.stripprefix.prefixes=/kmapgameee/api"
+      - "traefik.http.services.server.loadbalancer.server.port=8000"
+    expose:
+      - "8000"
+    # ports:
+    #   - "8000:8000"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
